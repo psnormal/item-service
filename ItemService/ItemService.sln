@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemService", "ItemService.csproj", "{53600E7F-976E-47FA-98FF-B0087E31C565}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{53600E7F-976E-47FA-98FF-B0087E31C565}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53600E7F-976E-47FA-98FF-B0087E31C565}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53600E7F-976E-47FA-98FF-B0087E31C565}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53600E7F-976E-47FA-98FF-B0087E31C565}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {50CF9C34-EF9B-422E-B6DA-F560A0789CE7}
+	EndGlobalSection
+EndGlobal
