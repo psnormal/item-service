@@ -7,10 +7,12 @@ namespace ItemService.Services
     public class ItemsService : IItemService
     {
         private readonly ApplicationDbContext _context;
+        private IScheduleService _scheduleService;
 
         public ItemsService(ApplicationDbContext context)
         {
             _context = context;
+            _scheduleService = new ScheduleService(context);
         }
 
         public async Task<int> CreateItem(ItemCreateDto item)
@@ -27,6 +29,8 @@ namespace ItemService.Services
 
             await _context.Items.AddAsync(newItem);
             await _context.SaveChangesAsync();
+
+            await _scheduleService.CreateItemSchedule(item.Schedule, newItem.Id);
 
             return newItem.Id;
         }
@@ -48,8 +52,9 @@ namespace ItemService.Services
                 ItemName = itemInfo.ItemName,
                 ItemDescription = itemInfo.ItemDescription,
                 CostPerHour = itemInfo.CostPerHour,
-                ItemType = itemInfo.ItemType
-            };
+                ItemType = itemInfo.ItemType,
+                Schedule = _scheduleService.GetItemSchedule(id)
+        };
 
             return item;
         }
@@ -98,6 +103,8 @@ namespace ItemService.Services
             itemInfo.CostPerHour = model.CostPerHour;
 
             await _context.SaveChangesAsync();
+
+            await _scheduleService.UpdateItemSchedule(model.Schedule, id);
         }
 
         public async Task DeleteItem(int id)
@@ -111,6 +118,7 @@ namespace ItemService.Services
 
             _context.Items.Remove(itemInfo);
             await _context.SaveChangesAsync();
+            await _scheduleService.DeleteItemSchedule(id);
         }
     }
 }

@@ -2,19 +2,19 @@
 {
     public class ScheduleDto
     {
-        public TimeOnly MonStart { get; set; }
-        public TimeOnly MonEnd { get; set; }
-        public TimeOnly TueStart { get; set; }
-        public TimeOnly TueEnd { get; set; }
-        public TimeOnly WedStart { get; set; }
-        public TimeOnly WedEnd { get; set; }
-        public TimeOnly ThuStart { get; set; }
-        public TimeOnly ThuEnd { get; set; }
-        public TimeOnly FriStart { get; set; }
-        public TimeOnly FriEnd { get; set; }
-        public TimeOnly SatStart { get; set; }
-        public TimeOnly SatEnd { get; set; }
-        public TimeOnly SunStart { get; set; }
-        public TimeOnly SunEnd { get; set; }
+        public string? MonStart { get; set; }
+        public string? MonEnd { get; set; }
+        public string? TueStart { get; set; }
+        public string? TueEnd { get; set; }
+        public string? WedStart { get; set; }
+        public string? WedEnd { get; set; }
+        public string? ThuStart { get; set; }
+        public string? ThuEnd { get; set; }
+        public string? FriStart { get; set; }
+        public string? FriEnd { get; set; }
+        public string? SatStart { get; set; }
+        public string? SatEnd { get; set; }
+        public string? SunStart { get; set; }
+        public string? SunEnd { get; set; }
     }
 }
