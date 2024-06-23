@@ -60,7 +60,7 @@ namespace ItemService.Controllers
 
         [HttpGet]
         [Route("items")]
-        public ActionResult<GetItemsDto> GetAllItems()
+        public ActionResult<GetItemsWithTypesDto> GetAllItems()
         {
             if (!ModelState.IsValid)
             {
@@ -98,7 +98,7 @@ namespace ItemService.Controllers
 
         [HttpGet]
         [Route("user/{ownerId}/items")]
-        public ActionResult<GetItemsDto> GetItemsByOwner(Guid ownerId)
+        public ActionResult<GetItemsDto> GetItemsByOwner(int ownerId)
         {
             if (!ModelState.IsValid)
             {

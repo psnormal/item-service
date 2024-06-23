@@ -18,9 +18,9 @@ namespace ItemService.Services
             var newItem = new Item
             {
                 OwnerUserId = item.OwnerUserId,
+                OwnerName = item.OwnerName,
                 ItemName = item.ItemName,
                 ItemDescription = item.ItemDescription,
-                CostPerDay = item.CostPerDay,
                 CostPerHour = item.CostPerHour,
                 ItemType = item.ItemType
             };
@@ -44,9 +44,9 @@ namespace ItemService.Services
             {
                 Id = itemInfo.Id,
                 OwnerUserId = itemInfo.OwnerUserId,
+                OwnerName = itemInfo.OwnerName,
                 ItemName = itemInfo.ItemName,
                 ItemDescription = itemInfo.ItemDescription,
-                CostPerDay = itemInfo.CostPerDay,
                 CostPerHour = itemInfo.CostPerHour,
                 ItemType = itemInfo.ItemType
             };
@@ -54,14 +54,22 @@ namespace ItemService.Services
             return item;
         }
 
-        public GetItemsDto GetItemsInfo()
+        public GetItemsWithTypesDto GetItemsInfo()
         {
-            var items = _context.Items.ToList();
-            GetItemsDto itemsList = new GetItemsDto(items);
+            GetItemsWithTypesDto itemsList = new GetItemsWithTypesDto {
+                ClothesAndShoes = GetItemsInfoByType(ItemType.ClothesAndShoes),
+                Requisite = GetItemsInfoByType(ItemType.Requisite),
+                Equipment = GetItemsInfoByType(ItemType.Equipment),
+                Place = GetItemsInfoByType(ItemType.Place),
+                Photo = GetItemsInfoByType(ItemType.Photo),
+                Video = GetItemsInfoByType(ItemType.Video),
+                Makeup = GetItemsInfoByType(ItemType.Makeup),
+                Other = GetItemsInfoByType(ItemType.Other)
+            };
             return itemsList;
         }
 
-        public GetItemsDto GetItemsInfoByUser(Guid ownerUserId)
+        public GetItemsDto GetItemsInfoByUser(int ownerUserId)
         {
             var items = _context.Items.Where(c => c.OwnerUserId == ownerUserId).ToList();
             GetItemsDto itemsList = new GetItemsDto(items);
@@ -87,7 +95,6 @@ namespace ItemService.Services
             itemInfo.ItemName = model.ItemName;
             itemInfo.ItemDescription = model.ItemDescription;
             itemInfo.ItemType = model.ItemType;
-            itemInfo.CostPerDay = model.CostPerDay;
             itemInfo.CostPerHour = model.CostPerHour;
 
             await _context.SaveChangesAsync();

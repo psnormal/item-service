@@ -7,8 +7,8 @@ namespace ItemService.Services
     {
         Task<int> CreateItem(ItemCreateDto item);
         GetItemDto GetItemInfo(int id);
-        GetItemsDto GetItemsInfo();
-        GetItemsDto GetItemsInfoByUser(Guid ownerUserId);
+        GetItemsWithTypesDto GetItemsInfo();
+        GetItemsDto GetItemsInfoByUser(int ownerUserId);
         GetItemsDto GetItemsInfoByType(ItemType type);
         Task UpdateItem(int id, ItemUpdateDto model);
         Task DeleteItem(int id);
