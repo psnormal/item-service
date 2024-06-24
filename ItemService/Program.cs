@@ -15,6 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IItemService, ItemsService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
+builder.Services.AddScoped<IApplicationService, ApplicationService>();
 
 //DB connection:
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
