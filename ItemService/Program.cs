@@ -30,6 +30,8 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
+app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://elena-karelina.github.io/photoShootBuilder/").AllowCredentials());
+
 app.UseAuthorization();
 
 app.MapControllers();
