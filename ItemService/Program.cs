@@ -30,7 +30,7 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://elena-karelina.github.io/photoShootBuilder/", "http://localhost:5173/").AllowCredentials());
+app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://elena-karelina.github.io/photoShootBuilder", "http://localhost:5173").AllowCredentials());
 
 app.UseAuthorization();
 
