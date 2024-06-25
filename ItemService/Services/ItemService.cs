@@ -24,7 +24,8 @@ namespace ItemService.Services
                 ItemName = item.ItemName,
                 ItemDescription = item.ItemDescription,
                 CostPerHour = item.CostPerHour,
-                ItemType = item.ItemType
+                ItemType = item.ItemType,
+                Pictures = item.Pictures
             };
 
             await _context.Items.AddAsync(newItem);
@@ -53,6 +54,7 @@ namespace ItemService.Services
                 ItemDescription = itemInfo.ItemDescription,
                 CostPerHour = itemInfo.CostPerHour,
                 ItemType = itemInfo.ItemType,
+                Pictures = itemInfo.Pictures,
                 Schedule = _scheduleService.GetItemSchedule(id)
         };
 
@@ -101,6 +103,7 @@ namespace ItemService.Services
             itemInfo.ItemDescription = model.ItemDescription;
             itemInfo.ItemType = model.ItemType;
             itemInfo.CostPerHour = model.CostPerHour;
+            itemInfo.Pictures = model.Pictures;
 
             await _context.SaveChangesAsync();
 

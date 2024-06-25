@@ -150,5 +150,21 @@ namespace ItemService.Controllers
                 return StatusCode(500, "Something went wrong");
             }
         }
+
+        [HttpPost]
+        [Route("application/reservationTime")]
+        public ActionResult<List<ResReservTimeDto>> FindReservationTimeForDateItems(ReqReservTimeDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            var result = new List<ResReservTimeDto>();
+            var a = new ResReservTimeDto { 
+            Start = DateTime.Now,
+            End = DateTime.Now.AddHours(model.Hours)};
+            result.Add(a); result.Add(a);
+            return result;
+        }
     }
 }
