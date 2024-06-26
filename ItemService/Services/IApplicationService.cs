@@ -12,5 +12,7 @@ namespace ItemService.Services
         List<GetApplDto> GetIncomingApplications(int UserId);
         Task UpdateApplication(int id, ApplicationUpdateDto model);
         Task DeleteApplication(int id);
+        Task ChangeItemInApplState(ApplicationItemStates state, int id);
+        Task ChangeTimesItemInApplState(ResReservTimeDto times, int id);
     }
 }

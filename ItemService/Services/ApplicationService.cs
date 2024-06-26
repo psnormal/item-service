@@ -52,6 +52,11 @@ namespace ItemService.Services
             return _context.ApplicationsItems.Where(c => c.ApplicationId == applId).ToList();
         }
 
+        public List<ApplicationItems> GetAllItemsInApplByUser(int applId, int UserId)
+        {
+            return _context.ApplicationsItems.Where(c => c.ApplicationId == applId && c.OwnerId == UserId).ToList();
+        }
+
         public GetApplDto GetApplication(int applId)
         {
             var appl = _context.Applications.FirstOrDefault(c => c.Id == applId);
@@ -111,7 +116,7 @@ namespace ItemService.Services
                     ApplicationName = appl.ApplicationName,
                     ApplicationDescription = appl.ApplicationDescription,
                     State = appl.State,
-                    ItemsInApplication = GetAllItemsInAppl(appl.Id)
+                    ItemsInApplication = GetAllItemsInApplByUser(appl.Id, UserId)
                 };
                 applications.Add(application);
             }
@@ -179,6 +184,90 @@ namespace ItemService.Services
 
             _context.Applications.Remove(appl);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task ChangeItemInApplState(ApplicationItemStates state, int id)
+        {
+            var itemInAppl = _context.ApplicationsItems.FirstOrDefault(c => c.Id == id);
+
+            if (itemInAppl == null)
+            {
+                throw new ValidationException("This item does not exist in application");
+            }
+
+            itemInAppl.State = state;
+
+            await _context.SaveChangesAsync();
+
+            //логика по смене состояний основной заявки
+            var listItems = new List<ApplicationItems>();
+            listItems = GetAllItemsInAppl(itemInAppl.ApplicationId); //все услуги в текущей заявке
+            int cnt = 0;
+            var application = _context.Applications.FirstOrDefault(c => c.Id == itemInAppl.ApplicationId);
+            if (application == null)
+            {
+                throw new ValidationException("This item does not exist in application");
+            }
+            foreach (var item in listItems)
+            {
+                if (item.State == ApplicationItemStates.Approved) cnt++;
+            }
+
+            if (state == ApplicationItemStates.Approved)
+            {   
+                if (cnt == listItems.Count) //если все заявки согласованы
+                {
+                    application.State = ApplicationState.Approved;
+                    await _context.SaveChangesAsync();
+                } else if (cnt == 1) //если согласована первая заявка
+                {
+                    application.State = ApplicationState.InProgress;
+                    await _context.SaveChangesAsync();
+                }
+            } else if (state == ApplicationItemStates.Declined) //если кто-то отменил участие, то заявка в процессе (мб она была согласована, но пришлось откатить)
+            {
+                application.State = ApplicationState.InProgress;
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task ChangeTimesItemInApplState(ResReservTimeDto times, int id)
+        {
+            var itemInAppl = _context.ApplicationsItems.FirstOrDefault(c => c.Id == id);
+
+            if (itemInAppl == null)
+            {
+                throw new ValidationException("This item does not exist in application");
+            }
+
+            itemInAppl.State = ApplicationItemStates.Approved;
+            itemInAppl.DateTimeStart = times.Start;
+            itemInAppl.DateTimeEnd = times.End;
+
+            await _context.SaveChangesAsync();
+
+            var listItems = new List<ApplicationItems>();
+            listItems = GetAllItemsInAppl(itemInAppl.ApplicationId); //все услуги в текущей заявке
+            int cnt = 0;
+            var application = _context.Applications.FirstOrDefault(c => c.Id == itemInAppl.ApplicationId);
+            if (application == null)
+            {
+                throw new ValidationException("This item does not exist in application");
+            }
+            foreach (var item in listItems)
+            {
+                if (item.State == ApplicationItemStates.Approved) cnt++;
+            }
+            if (cnt == listItems.Count) //если все заявки согласованы
+            {
+                application.State = ApplicationState.Approved;
+                await _context.SaveChangesAsync();
+            }
+            else if (cnt == 1) //если согласована первая заявка
+            {
+                application.State = ApplicationState.InProgress;
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ItemService.Dto;
+using ItemService.Models;
 using ItemService.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -165,6 +166,78 @@ namespace ItemService.Controllers
             End = DateTime.Now.AddHours(model.Hours)};
             result.Add(a); result.Add(a);
             return result;
+        }
+
+        [HttpPost]
+        [Route("applyItemInApplication")]
+        public async Task<IActionResult> ApplyItemInApplication([FromBody] int ItemInApplicationId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await _applService.ChangeItemInApplState(ApplicationItemStates.Approved, ItemInApplicationId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "This item does not exist in application")
+                {
+                    return StatusCode(400, ex.Message);
+                }
+                return StatusCode(500, "Something went wrong");
+            }
+        }
+
+        [HttpPost]
+        [Route("declineItemInApplication")]
+        public async Task<IActionResult> DeclineItemInApplication([FromBody] int ItemInApplicationId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await _applService.ChangeItemInApplState(ApplicationItemStates.Declined, ItemInApplicationId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "This item does not exist in application")
+                {
+                    return StatusCode(400, ex.Message);
+                }
+                return StatusCode(500, "Something went wrong");
+            }
+        }
+
+        [HttpPost]
+        [Route("changeItemInApplication/{id}")]
+        public async Task<IActionResult> ChangeTimesItemInApplication(ResReservTimeDto times, int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await _applService.ChangeTimesItemInApplState(times, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "This item does not exist in application")
+                {
+                    return StatusCode(400, ex.Message);
+                }
+                return StatusCode(500, "Something went wrong");
+            }
         }
     }
 }
