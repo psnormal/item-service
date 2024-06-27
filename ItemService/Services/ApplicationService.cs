@@ -269,5 +269,73 @@ namespace ItemService.Services
                 await _context.SaveChangesAsync();
             }
         }
+
+        public List<ResReservTimeDto> FindTimeForAppl(ReqReservTimeDto model)
+        {
+            //к старту работы прибавляем кол-во часов, если меньше конца дня, то делаем слот, добавляем в массив, если больше конца дня, то выход из цикла
+            //учет броней??
+            var result = new List<ResReservTimeDto>();//пустой пока
+
+            var weekday = model.ApplicationDate.DayOfWeek;
+            TimeOnly? maxStart = TimeOnly.MinValue; TimeOnly? minEnd = TimeOnly.MaxValue;
+            foreach (var item in model.ItemsId)
+            {
+                var itemSched = _context.ScheduleItems.FirstOrDefault(c => c.ItemId == item);
+                if (weekday == DayOfWeek.Monday)
+                { 
+                    if (itemSched.MonStart == null || itemSched.MonEnd == null) return result;
+                    if (itemSched.MonStart > maxStart) maxStart = itemSched.MonStart;
+                    if (itemSched.MonEnd < minEnd) minEnd = itemSched.MonEnd;
+                } else if (weekday == DayOfWeek.Tuesday)
+                {
+                    if (itemSched.TueStart == null || itemSched.TueEnd == null) return result;
+                    if (itemSched.TueStart > maxStart) maxStart = itemSched.TueStart;
+                    if (itemSched.TueEnd < minEnd) minEnd = itemSched.TueEnd;
+                }
+                else if (weekday == DayOfWeek.Wednesday)
+                {
+                    if (itemSched.WedStart == null || itemSched.WedEnd == null) return result;
+                    if (itemSched.WedStart > maxStart) maxStart = itemSched.WedStart;
+                    if (itemSched.WedEnd < minEnd) minEnd = itemSched.WedEnd;
+                }
+                else if (weekday == DayOfWeek.Thursday)
+                {
+                    if (itemSched.ThuStart == null || itemSched.ThuEnd == null) return result;
+                    if (itemSched.ThuStart > maxStart) maxStart = itemSched.ThuStart;
+                    if (itemSched.ThuEnd < minEnd) minEnd = itemSched.ThuEnd;
+                }
+                else if (weekday == DayOfWeek.Friday)
+                {
+                    if (itemSched.FriStart == null || itemSched.FriEnd == null) return result;
+                    if (itemSched.FriStart > maxStart) maxStart = itemSched.FriStart;
+                    if (itemSched.FriEnd < minEnd) minEnd = itemSched.FriEnd;
+                }
+                else if (weekday == DayOfWeek.Saturday)
+                {
+                    if (itemSched.SatStart == null || itemSched.SatEnd == null) return result;
+                    if (itemSched.SatStart > maxStart) maxStart = itemSched.SatStart;
+                    if (itemSched.SatEnd < minEnd) minEnd = itemSched.SatEnd;
+                }
+                else if (weekday == DayOfWeek.Sunday)
+                {
+                    if (itemSched.SunStart == null || itemSched.SunEnd == null) return result;
+                    if (itemSched.SunStart > maxStart) maxStart = itemSched.SunStart;
+                    if (itemSched.SunEnd < minEnd) minEnd = itemSched.SunEnd;
+                }
+            }
+
+            var timeSlot = new ResReservTimeDto();
+            timeSlot.Start = model.ApplicationDate.ToDateTime(TimeOnly.Parse(maxStart.ToString()));
+            timeSlot.End = model.ApplicationDate.ToDateTime(TimeOnly.Parse(minEnd.ToString()));
+            if (timeSlot.Start.AddHours(model.Hours) > timeSlot.End)
+                return result;
+            else
+            {
+                timeSlot.End = timeSlot.Start.AddHours(model.Hours);
+                result.Add(timeSlot);
+                return result;
+            }
+
+        }
     }
 }

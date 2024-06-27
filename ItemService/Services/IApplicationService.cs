@@ -14,5 +14,6 @@ namespace ItemService.Services
         Task DeleteApplication(int id);
         Task ChangeItemInApplState(ApplicationItemStates state, int id);
         Task ChangeTimesItemInApplState(ResReservTimeDto times, int id);
+        List<ResReservTimeDto> FindTimeForAppl(ReqReservTimeDto model);
     }
 }

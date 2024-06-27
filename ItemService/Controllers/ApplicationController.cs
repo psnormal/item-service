@@ -160,12 +160,8 @@ namespace ItemService.Controllers
             {
                 return BadRequest();
             }
-            var result = new List<ResReservTimeDto>();
-            var a = new ResReservTimeDto { 
-            Start = DateTime.Now,
-            End = DateTime.Now.AddHours(model.Hours)};
-            result.Add(a); result.Add(a);
-            return result;
+            
+            return _applService.FindTimeForAppl(model);
         }
 
         [HttpPost]
